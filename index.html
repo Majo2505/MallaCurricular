@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Interactiva - Ingeniería de Sistemas 2024</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --locked: #d5dbdb;
+            --available: #aed6f1;
+            --completed: #52be80;
+            --text: #34495e;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .malla-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
+        .ciclo-col {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ciclo-header {
+            text-align: center;
+            font-weight: bold;
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .materia {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .materia.locked {
+            background: var(--locked);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .materia.available {
+            background: var(--available);
+            border-color: #3498db;
+        }
+
+        .materia.completed {
+            background: var(--completed);
+            color: white;
+        }
+
+        .materia-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .materia-code {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Tooltip */
+        .materia .tooltip {
+            visibility: hidden;
+            width: 160px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 110%;
+            left: 50%;
+            margin-left: -80px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+            pointer-events: none;
+        }
+
+        .materia.locked:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .progress-bar {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ddd;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--completed);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ingeniería de Sistemas - Malla Curricular 2024</h1>
+    
+    <div class="progress-bar">
+        <div id="progress-fill"></div>
+    </div>
+    <p style="text-align:center" id="progress-text">Progreso: 0%</p>
+
+    <div class="malla-container" id="malla-grid">
+        </div>
+
+    <script>
+        // Estructura de datos basada en el PDF [cite: 1, 9, 44, 50, 67, 101, 106]
+        const materias = [
+            // SEMESTRE 1
+            { id: "MAT-123", name: "Álgebra Lineal", sem: 1, req: [] },
+            { id: "MAT-122", name: "Matemáticas Discretas", sem: 1, req: [] },
+            { id: "SIS-111", name: "Introd. a la Programación", sem: 1, req: [] },
+            { id: "SIS-121", name: "Ingeniería de Sistemas", sem: 1, req: [] },
+            { id: "FIL-107", name: "Formación Humana I", sem: 1, req: [] },
+
+            // SEMESTRE 2
+            { id: "MAT-132", name: "Cálculo I", sem: 2, req: [] },
+            { id: "MAT-251", name: "Investigación Operativa I", sem: 2, req: ["MAT-123"] },
+            { id: "MAT-142", name: "Probabilidad y Estadística I", sem: 2, req: ["MAT-122"] },
+            { id: "SIS-112", name: "Programación I", sem: 2, req: ["SIS-111"] },
+            { id: "SIS-133", name: "Arq. Computacional I", sem: 2, req: ["SIS-111"] },
+
+            // SEMESTRE 3
+            { id: "MAT-133", name: "Cálculo II", sem: 3, req: ["MAT-132"] },
+            { id: "FIS-111", name: "Física I y Lab", sem: 3, req: ["MAT-132"] },
+            { id: "MAT-143", name: "Probabilidad y Estadística II", sem: 3, req: ["MAT-142"] },
+            { id: "SIS-113", name: "Programación II", sem: 3, req: ["SIS-112"] },
+            { id: "SIS-122", name: "Bases de Datos I", sem: 3, req: ["SIS-112"] },
+
+            // SEMESTRE 4
+            { id: "MAT-262", name: "Inv. Operativa II y Lab", sem: 4, req: ["MAT-251"] },
+            { id: "SIS-211", name: "Estructuras de Datos", sem: 4, req: ["SIS-113"] },
+            { id: "SIS-214", name: "Tecnologías Web I", sem: 4, req: ["SIS-113"] },
+            { id: "SIS-221", name: "Bases de Datos II", sem: 4, req: ["SIS-122"] },
+            { id: "SIS-225", name: "Sistemas de Información", sem: 4, req: ["SIS-122"] },
+
+            // SEMESTRE 5
+            { id: "SIS-212", name: "Prog. Dispositivos Móviles", sem: 5, req: ["SIS-211"] },
+            { id: "SIS-215", name: "Tecnologías Web II", sem: 5, req: ["SIS-214"] },
+            { id: "SIS-251", name: "IA I", sem: 5, req: ["SIS-211"] },
+            { id: "SIS-231", name: "Redes de Computadoras I", sem: 5, req: ["SIS-133"] },
+
+            // SEMESTRE 6
+            { id: "SIS-213", name: "Ingeniería de Software", sem: 6, req: ["SIS-211", "SIS-225"] },
+            { id: "SIS-252", name: "Inteligencia Artificial II", sem: 6, req: ["SIS-251"] },
+            { id: "SIS-233", name: "Redes de Computadoras II", sem: 6, req: ["SIS-231"] },
+            { id: "DER-394", name: "Derecho de las TIC", sem: 6, req: [] },
+        ];
+
+        let aprobadas = JSON.parse(localStorage.getItem('malla_aprobadas')) || [];
+
+        function initMalla() {
+            const grid = document.getElementById('malla-grid');
+            grid.innerHTML = '';
+            
+            // Agrupar por semestres
+            for(let i=1; i<=6; i++) {
+                const col = document.createElement('div');
+                col.className = 'ciclo-col';
+                col.innerHTML = `<div class="ciclo-header">Semestre ${i}</div>`;
+                
+                materias.filter(m => m.sem === i).forEach(materia => {
+                    const el = createMateriaElement(materia);
+                    col.appendChild(el);
+                });
+                grid.appendChild(col);
+            }
+            updateProgress();
+        }
+
+        function createMateriaElement(materia) {
+            const div = document.createElement('div');
+            const isCompleted = aprobadas.includes(materia.id);
+            const missingReqs = materia.req.filter(r => !aprobadas.includes(r));
+            const isLocked = !isCompleted && missingReqs.length > 0;
+
+            div.className = `materia ${isCompleted ? 'completed' : (isLocked ? 'locked' : 'available')}`;
+            div.innerHTML = `
+                <span class="materia-name">${materia.name}</span>
+                <span class="materia-code">${materia.id}</span>
+                <div class="tooltip">${isLocked ? 'Falta: ' + missingReqs.join(', ') : 'Click para aprobar'}</div>
+            `;
+
+            div.onclick = () => {
+                if (isLocked) return;
+                
+                if (isCompleted) {
+                    aprobadas = aprobadas.filter(id => id !== materia.id);
+                } else {
+                    aprobadas.push(materia.id);
+                }
+                
+                localStorage.setItem('malla_aprobadas', JSON.stringify(aprobadas));
+                initMalla(); // Re-renderizar para actualizar dependencias
+            };
+
+            return div;
+        }
+
+        function updateProgress() {
+            const percent = (aprobadas.length / materias.length) * 100;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `Progreso: ${Math.round(percent)}% (${aprobadas.length} de ${materias.length} materias)`;
+        }
+
+        initMalla();
+    </script>
+</body>
+</html>
