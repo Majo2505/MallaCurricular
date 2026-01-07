@@ -82,51 +82,59 @@
             { id: "MAT-251", name: "Investigación Operativa I", sem: 2, req: ["MAT-123"] },
             { id: "MAT-142", name: "Probabilidad y Estadística I", sem: 2, req: ["MAT-122"] },
             { id: "SIS-112", name: "Programación I", sem: 2, req: ["SIS-111"] },
-            { id: "SIS-133", name: "Arq. Computacional I", sem: 2, req: ["SIS-111"] },
+            { id: "SIS-133", name: "Arq. Computacional I", sem: 2, req: ["SIS-111", "SIS-121", "MAT-122"] },
             { id: "FHC-140", name: "Antropología Cristiana", sem: 2, req: [] },
+            { id: "FIL-207", name: "Epistemología", sem: 2, req: ["FIL-107"] },
 
             // SEM 3
             { id: "MAT-133", name: "Cálculo II", sem: 3, req: ["MAT-132"] },
-            { id: "FIS-111", name: "Física I y Laboratorio", sem: 3, req: ["MAT-132"] },
+            { id: "FIS-111", name: "Física I y Laboratorio", sem: 3, req: [] },
             { id: "MAT-143", name: "Probabilidad y Estadística II", sem: 3, req: ["MAT-142"] },
             { id: "SIS-113", name: "Programación II", sem: 3, req: ["SIS-112"] },
             { id: "SIS-122", name: "Bases de Datos I", sem: 3, req: ["SIS-112"] },
-            { id: "FIL-207", name: "Ética", sem: 3, req: ["FIL-107"] },
+            { id: "SIS-161", name: "Metodología de la Investigación", sem: 3, req: [] },
 
             // SEM 4
             { id: "MAT-262", name: "Inv. Operativa II y Lab.", sem: 4, req: ["MAT-251"] },
             { id: "SIS-211", name: "Estructuras de Datos", sem: 4, req: ["SIS-113"] },
-            { id: "SIS-214", name: "Tecnologías Web I", sem: 4, req: ["SIS-113"] },
+            { id: "SIS-214", name: "Tecnologías Web I", sem: 4, req: ["SIS-113", "SIS-122"] },
             { id: "SIS-221", name: "Bases de Datos II", sem: 4, req: ["SIS-122"] },
             { id: "SIS-225", name: "Sistemas de Información", sem: 4, req: ["SIS-122"] },
+            { id: "FHC-240", name: "Cristología", sem: 4, req: ["FHC-140"] },
 
             // SEM 5
-            { id: "MAT-381", name: "Análisis de Algoritmos", sem: 5, req: ["SIS-211"] },
-            { id: "SIS-212", name: "Prog. Dispositivos Móviles", sem: 5, req: ["SIS-211"] },
-            { id: "SIS-215", name: "Tecnologías Web II", sem: 5, req: ["SIS-214"] },
-            { id: "SIS-251", name: "Inteligencia Artificial I", sem: 5, req: ["SIS-211"] },
+            { id: "MAT-361", name: "Análisis de Algoritmos", sem: 5, req: ["SIS-211"] },
+            { id: "SIS-212", name: "Prog. Dispositivos Móviles", sem: 5, req: ["SIS-211", "SIS-113"] },
+            { id: "SIS-215", name: "Tecnologías Web II", sem: 5, req: ["SIS-214", "SIS-221"] },
+            { id: "SIS-251", name: "Ingeniería de Datos", sem: 5, req: ["MAT-133", "MAT-123"] },
+            { id: "SIS-226", name: "Sistemas de Soporte a las Decisiones Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
             { id: "SIS-231", name: "Redes de Computadoras I", sem: 5, req: ["SIS-133"] },
+            { id: "LIBRE", name: "LIBRE I", sem: 5, req: [] },
 
             // SEM 6
-            { id: "SIS-213", name: "Ingeniería de Software", sem: 6, req: ["SIS-211", "SIS-225"] },
-            { id: "SIS-216", name: "Modelado y Simulación", sem: 6, req: ["MAT-143"] },
-            { id: "SIS-252", name: "Inteligencia Artificial II", sem: 6, req: ["SIS-251"] },
-            { id: "DER-394", name: "Derecho de las TIC y Ética", sem: 6, req: [] },
+            { id: "SIS-213", name: "Ingeniería de Software", sem: 6, req: ["SIS-214", "SIS-225"] },
+            { id: "SIS-216", name: "Modelado, Dinámica de Sistemas y Simulación", sem: 6, req: ["MAT-252","FIS-111"] },
+            { id: "SIS-252", name: "Inteligencia Artificial", sem: 6, req: ["SIS-251", "MAT-361"] },
+            { id: "DER-394", name: "Derecho de las TIC y Ética", sem: 6, req: ["SIS-226"] },
             { id: "SIS-233", name: "Redes de Computadoras II", sem: 6, req: ["SIS-231"] },
+            { id: "SIS-227", name: "Taller de Sistemas de Información", sem: 6, req: ["SIS-215", "SIS-226"] },
+            { id: "LIBRE", name: "LIBRE II", sem: 6, req: [] },
 
             // SEM 7
             { id: "SIS-311", name: "Arquitectura de Software", sem: 7, req: ["SIS-213"] },
-            { id: "SIS-312", name: "Gestión de Calidad de Software", sem: 7, req: ["SIS-213"] },
-            { id: "SIS-361", name: "Ética y Seguridad de Sist.", sem: 7, req: [] },
-            { id: "SIS-234", name: "Internet de las Cosas", sem: 7, req: ["SIS-231"] },
-            { id: "FHC-240", name: "FHC 2", sem: 7, req: ["FHC-140"] },
+            { id: "SIS-312", name: "Gestión de Calidad de Sistemas", sem: 7, req: ["SIS-227"] },
+            { id: "SIS-351", name: "Machine Learning", sem: 7, req: ["SIS-252"] },
+            { id: "SIS-361", name: "Ética y Seguridad de Sist.", sem: 7, req: ["SIS-227"] },
+            { id: "SIS-234", name: "Internet de las Cosas", sem: 7, req: ["SIS-233"] },
+            { id: "SIS-331", name: "Computación en la Nube", sem: 7, req: ["SIS-233"] },
+            { id: "FHC-340", name: "FHC 3", sem: 7, req: ["FHC-240"] },
 
             // SEM 8
-            { id: "SIS-315", name: "Gerencia de las TIC", sem: 8, req: ["SIS-311"] },
-            { id: "SIS-353", name: "Inteligencia de Negocios", sem: 8, req: ["SIS-221"] },
+            { id: "SIS-313", name: "Gerencia de las TIC", sem: 8, req: ["SIS-227"] },
+            { id: "SIS-352", name: "Taller de Sistemas Inteligentes", sem: 8, req: ["SIS-351"] },
             { id: "SIS-324", name: "Auditoría de Sistemas", sem: 8, req: ["SIS-312"] },
-            { id: "SIS-361-P", name: "Práctica Pre-Profesional", sem: 8, req: [] },
-            { id: "SIS-362", name: "Taller de Grado I", sem: 8, req: ["SIS-213"] },
+            { id: "SIS-361", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
+            { id: "SIS-362", name: "Taller de Grado I", sem: 8, req: ["SIS-312", "SIS-331"] },
 
             // SEM 9
             { id: "SIS-363", name: "Taller de Grado II", sem: 9, req: ["SIS-362"] }
