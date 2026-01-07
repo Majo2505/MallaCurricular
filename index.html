@@ -71,7 +71,7 @@
     <div class="malla-grid" id="malla"></div>
 
     <script>
-        const materias = [
+         const materias = [
             // SEM 1
             { id: "MAT-123", name: "Álgebra Lineal", sem: 1, req: [] },
             { id: "MAT-122", name: "Matemáticas Discretas", sem: 1, req: [] },
@@ -109,22 +109,22 @@
             { id: "SIS-212", name: "Prog. Dispositivos Móviles", sem: 5, req: ["SIS-211", "SIS-113"] },
             { id: "SIS-215", name: "Tecnologías Web II", sem: 5, req: ["SIS-214", "SIS-221"] },
             { id: "SIS-251", name: "Ingeniería de Datos", sem: 5, req: ["MAT-133", "MAT-123"] },
-            { id: "SIS-226", name: "Sistemas de Soporte Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
+            { id: "SIS-226", name: "Sistemas de Soporte a las Decisiones Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
             { id: "SIS-231", name: "Redes de Computadoras I", sem: 5, req: ["SIS-133"] },
-            { id: "LIBRE-1", name: "LIBRE I", sem: 5, req: [] },
+            { id: "LIBRE", name: "LIBRE I", sem: 5, req: [] },
 
             // SEM 6
             { id: "SIS-213", name: "Ingeniería de Software", sem: 6, req: ["SIS-214", "SIS-225"] },
-            { id: "SIS-216", name: "Modelado y Simulación", sem: 6, req: ["MAT-143","FIS-111"] },
+            { id: "SIS-216", name: "Modelado, Dinámica de Sistemas y Simulación", sem: 6, req: ["MAT-252","FIS-111"] },
             { id: "SIS-252", name: "Inteligencia Artificial", sem: 6, req: ["SIS-251", "MAT-361"] },
             { id: "DER-394", name: "Derecho de las TIC y Ética", sem: 6, req: ["SIS-226"] },
             { id: "SIS-233", name: "Redes de Computadoras II", sem: 6, req: ["SIS-231"] },
-            { id: "SIS-227", name: "Taller de Sist. Información", sem: 6, req: ["SIS-215", "SIS-226"] },
-            { id: "LIBRE-2", name: "LIBRE II", sem: 6, req: [] },
+            { id: "SIS-227", name: "Taller de Sistemas de Información", sem: 6, req: ["SIS-215", "SIS-226"] },
+            { id: "LIBRE", name: "LIBRE II", sem: 6, req: [] },
 
             // SEM 7
             { id: "SIS-311", name: "Arquitectura de Software", sem: 7, req: ["SIS-213"] },
-            { id: "SIS-312", name: "Gestión de Calidad de Sist.", sem: 7, req: ["SIS-227"] },
+            { id: "SIS-312", name: "Gestión de Calidad de Sistemas", sem: 7, req: ["SIS-227"] },
             { id: "SIS-351", name: "Machine Learning", sem: 7, req: ["SIS-252"] },
             { id: "SIS-361", name: "Ética y Seguridad de Sist.", sem: 7, req: ["SIS-227"] },
             { id: "SIS-234", name: "Internet de las Cosas", sem: 7, req: ["SIS-233"] },
@@ -133,9 +133,9 @@
 
             // SEM 8
             { id: "SIS-313", name: "Gerencia de las TIC", sem: 8, req: ["SIS-227"] },
-            { id: "SIS-352", name: "Taller Sist. Inteligentes", sem: 8, req: ["SIS-351"] },
+            { id: "SIS-352", name: "Taller de Sistemas Inteligentes", sem: 8, req: ["SIS-351"] },
             { id: "SIS-324", name: "Auditoría de Sistemas", sem: 8, req: ["SIS-312"] },
-            { id: "SIS-361-P", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
+            { id: "SIS-361", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
             { id: "SIS-362", name: "Taller de Grado I", sem: 8, req: ["SIS-312", "SIS-331"] },
 
             // SEM 9
