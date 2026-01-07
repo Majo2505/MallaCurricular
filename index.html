@@ -4,128 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malla SIS 2024 - Aesthetic Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #fcfafc; /* Blanco hueso */
-            --primary: #6d5b7b;  /* Lavanda profundo */
-            --completed: #d4f1f4; /* Menta pastel */
+            --bg-color: #fcfafc;
+            --primary: #6d5b7b;  
+            --completed: #d4f1f4; 
             --completed-text: #456268;
-            --available: #e2f0cb; /* Lima suave */
+            --available: #e2f0cb; 
             --available-text: #5b7044;
-            --locked: #f2f2f2;    /* Gris nube */
+            --locked: #f2f2f2;    
             --text: #4a4a4a;
-            --accent: #ffb7b2;    /* Coral pastel */
+            --accent: #ffb7b2;    
         }
 
         body { 
-            font-family: 'Quicksand', 'Segoe UI', sans-serif; 
+            font-family: 'Quicksand', sans-serif; 
             background: var(--bg-color); 
             color: var(--text); 
             padding: 30px;
+            margin: 0;
         }
 
-        h1 { 
-            text-align: center; 
-            color: var(--primary); 
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
+        h1 { text-align: center; color: var(--primary); font-weight: 300; letter-spacing: 1px; }
 
         .stats { 
-            max-width: 500px; 
-            margin: 0 auto 30px; 
-            text-align: center;
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
+            max-width: 500px; margin: 0 auto 30px; text-align: center;
+            background: white; padding: 15px; border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.03);
         }
 
-        .progress-container { 
-            background: #eee; 
-            height: 8px; 
-            border-radius: 10px; 
-            margin-top: 10px; 
-            overflow: hidden;
-        }
-
-        #progress-bar { 
-            height: 100%; 
-            background: linear-gradient(90deg, var(--accent), var(--primary)); 
-            width: 0%; 
-            transition: 0.8s ease; 
-        }
+        .progress-container { background: #eee; height: 8px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        #progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--primary)); width: 0%; transition: 0.8s ease; }
 
         .malla-grid {
             display: grid;
-            grid-template-columns: repeat(9, 190px);
+            grid-template-columns: repeat(9, 200px);
             gap: 20px;
             overflow-x: auto;
             padding: 20px;
+            scrollbar-width: thin;
         }
 
         .semestre-col { display: flex; flex-direction: column; gap: 15px; }
-        
-        .sem-header { 
-            color: var(--primary); 
-            text-align: center; 
-            padding: 5px; 
-            font-weight: bold; 
-            font-size: 0.85em;
-            text-transform: uppercase;
-        }
+        .sem-header { color: var(--primary); text-align: center; padding: 5px; font-weight: bold; font-size: 0.85em; text-transform: uppercase; }
 
         .materia {
-            background: white; 
-            border-radius: 15px; 
-            padding: 12px; 
-            min-height: 85px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
-            cursor: pointer;
-            transition: all 0.3s ease; 
-            position: relative; 
-            border: 1px solid #f0f0f0;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
+            background: white; border-radius: 15px; padding: 15px; min-height: 90px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); cursor: pointer;
+            transition: all 0.3s ease; border: 1px solid #f0f0f0;
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative;
         }
 
-        .materia:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-        }
-
-        .materia-name { font-size: 0.75rem; font-weight: 600; color: #555; margin-bottom: 5px; }
+        .materia:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+        .materia-name { font-size: 0.75rem; font-weight: 600; color: #555; margin-bottom: 5px; line-height: 1.2; }
         .materia-code { font-size: 0.6rem; color: #aaa; letter-spacing: 0.5px; }
 
         .materia.completed { background: var(--completed); border-color: transparent; }
         .materia.completed .materia-name { color: var(--completed-text); }
-
         .materia.available { background: var(--available); border-color: transparent; }
         .materia.available .materia-name { color: var(--available-text); }
-
         .materia.locked { background: var(--locked); opacity: 0.7; cursor: not-allowed; }
 
         .tooltip {
             visibility: hidden; background: var(--primary); color: white; text-align: center;
-            padding: 6px 10px; border-radius: 10px; position: absolute; z-index: 10;
-            bottom: 110%; left: 10%; width: 80%; font-size: 0.65rem;
-            opacity: 0; transition: 0.3s;
+            padding: 6px 10px; border-radius: 10px; position: absolute; z-index: 100;
+            bottom: 110%; left: 0; width: 100%; font-size: 0.65rem; opacity: 0; transition: 0.3s;
+            box-sizing: border-box; pointer-events: none;
         }
         .materia.locked:hover .tooltip { visibility: visible; opacity: 1; }
 
-        #fila-ingles {
-            display: flex; gap: 15px; justify-content: center; padding: 30px; overflow-x: auto;
-        }
+        #fila-ingles { display: flex; gap: 20px; justify-content: center; padding: 30px; overflow-x: auto; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <h1>Malla Curricular SIS 2024</h1>
 
     <div class="stats">
-        <div id="progreso-texto">Cargando...</div>
+        <div id="progreso-texto">Cargando progreso...</div>
         <div class="progress-container"><div id="progress-bar"></div></div>
     </div>
 
@@ -219,49 +177,13 @@
         function render() {
             const malla = document.getElementById('malla');
             const filaIngles = document.getElementById('fila-ingles');
-            malla.innerHTML = ''; filaIngles.innerHTML = '';
+            if (!malla || !filaIngles) return;
+            
+            malla.innerHTML = ''; 
+            filaIngles.innerHTML = '';
 
+            // Renderizar Semestres 1 al 9
             for (let s = 1; s <= 9; s++) {
                 const col = document.createElement('div');
                 col.className = 'semestre-col';
                 col.innerHTML = `<div class="sem-header">Semestre ${s}</div>`;
-                materias.filter(m => m.sem === s).forEach(m => col.appendChild(crearMateriaHTML(m)));
-                malla.appendChild(col);
-            }
-
-            materias.filter(m => m.sem === "INGLES").forEach(m => filaIngles.appendChild(crearMateriaHTML(m)));
-            actualizarProgreso();
-        }
-
-        function crearMateriaHTML(m) {
-            const isDone = aprobadas.includes(m.id);
-            const missing = m.req.filter(r => !aprobadas.includes(r));
-            const isLocked = !isDone && missing.length > 0;
-
-            const div = document.createElement('div');
-            div.className = `materia ${isDone ? 'completed' : (isLocked ? 'locked' : 'available')}`;
-            div.innerHTML = `
-                <div class="materia-name">${m.name}</div>
-                <div class="materia-code">${m.id}</div>
-                ${isLocked ? `<div class="tooltip">Necesitas: ${missing.join(', ')}</div>` : ''}
-            `;
-
-            div.onclick = () => {
-                if (isLocked) return;
-                isDone ? aprobadas = aprobadas.filter(id => id !== m.id) : aprobadas.push(m.id);
-                localStorage.setItem('ucb_sis_progreso', JSON.stringify(aprobadas));
-                render();
-            };
-            return div;
-        }
-
-        function actualizarProgreso() {
-            const pct = (aprobadas.length / materias.length) * 100;
-            document.getElementById('progress-bar').style.width = pct + '%';
-            document.getElementById('progreso-texto').innerText = `${aprobadas.length} de ${materias.length} materias completadas (${Math.round(pct)}%)`;
-        }
-
-        render();
-    </script>
-</body>
-</html>
