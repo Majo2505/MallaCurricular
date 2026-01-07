@@ -15,11 +15,15 @@
         }
 
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text); padding: 20px; }
-        h1 { text-align: center; color: var(--primary); }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
+
+        .stats { max-width: 600px; margin: 0 auto 20px; text-align: center; }
+        .progress-container { background: #ddd; height: 10px; border-radius: 5px; margin-top: 10px; }
+        #progress-bar { height: 100%; background: var(--completed); width: 0%; border-radius: 5px; transition: 0.5s; }
 
         .malla-grid {
             display: grid;
-            grid-template-columns: repeat(9, 200px); /* Ajustado para mejor visibilidad */
+            grid-template-columns: repeat(9, 200px);
             gap: 15px;
             overflow-x: auto;
             padding: 20px 0;
@@ -54,9 +58,10 @@
         }
         .materia.locked:hover .tooltip { visibility: visible; }
 
-        .stats { max-width: 600px; margin: 0 auto 20px; text-align: center; }
-        .progress-container { background: #ddd; height: 10px; border-radius: 5px; margin-top: 10px; }
-        #progress-bar { height: 100%; background: var(--completed); width: 0%; border-radius: 5px; transition: 0.5s; }
+        #fila-ingles {
+            display: flex; gap: 15px; justify-content: center; padding: 20px; overflow-x: auto;
+        }
+        #fila-ingles .materia { flex: 0 0 180px; }
     </style>
 </head>
 <body>
@@ -64,25 +69,25 @@
     <h1>Ingeniería de Sistemas - Malla 2024</h1>
 
     <div class="stats">
-        <div id="progreso-texto">Progreso: 0 / 51 materias</div>
+        <div id="progreso-texto">Progreso: 0 / 57 materias</div>
         <div class="progress-container"><div id="progress-bar"></div></div>
     </div>
 
     <div class="malla-grid" id="malla"></div>
+
     <h2 style="text-align:center; color: var(--primary); margin-top:40px;">Línea de Inglés</h2>
-    <div id="fila-ingles" style="display: flex; gap: 15px; justify-content: center; padding: 20px; overflow-x: auto;">
-    </div>
+    <div id="fila-ingles"></div>
 
     <script>
-         const materias = [
-            // SEM 1
+        const materias = [
+            // SEM 1 [cite: 8, 12, 15, 26, 28]
             { id: "MAT-123", name: "Álgebra Lineal", sem: 1, req: [] },
             { id: "MAT-122", name: "Matemáticas Discretas", sem: 1, req: [] },
             { id: "SIS-111", name: "Introd. a la Programación", sem: 1, req: [] },
             { id: "SIS-121", name: "Ingeniería de Sistemas", sem: 1, req: [] },
             { id: "FIL-107", name: "Pensamiento Crítico", sem: 1, req: [] },
 
-            // SEM 2
+            // SEM 2 [cite: 34, 35, 38, 44, 45, 51, 56]
             { id: "MAT-132", name: "Cálculo I", sem: 2, req: [] },
             { id: "MAT-251", name: "Investigación Operativa I", sem: 2, req: ["MAT-123"] },
             { id: "MAT-142", name: "Probabilidad y Estadística I", sem: 2, req: [] },
@@ -91,7 +96,7 @@
             { id: "FHC-140", name: "Antropología Cristiana", sem: 2, req: [] },
             { id: "FIL-207", name: "Epistemología", sem: 2, req: ["FIL-107"] },
 
-            // SEM 3
+            // SEM 3 [cite: 50, 53, 59, 64, 128]
             { id: "MAT-133", name: "Cálculo II", sem: 3, req: ["MAT-132"] },
             { id: "FIS-111", name: "Física I y Laboratorio", sem: 3, req: [] },
             { id: "MAT-143", name: "Probabilidad y Estadística II", sem: 3, req: ["MAT-142"] },
@@ -99,7 +104,7 @@
             { id: "SIS-122", name: "Bases de Datos I", sem: 3, req: ["SIS-112"] },
             { id: "SIS-161", name: "Metodología de la Investigación", sem: 3, req: [] },
 
-            // SEM 4
+            // SEM 4 [cite: 60, 67, 69, 70, 71, 135]
             { id: "MAT-262", name: "Inv. Operativa II y Lab.", sem: 4, req: ["MAT-251"] },
             { id: "SIS-211", name: "Estructuras de Datos", sem: 4, req: ["SIS-113"] },
             { id: "SIS-214", name: "Tecnologías Web I", sem: 4, req: ["SIS-113", "SIS-122"] },
@@ -107,44 +112,44 @@
             { id: "SIS-225", name: "Sistemas de Información", sem: 4, req: ["SIS-122"] },
             { id: "FHC-240", name: "Cristología", sem: 4, req: ["FHC-140"] },
 
-            // SEM 5
+            // SEM 5 [cite: 74, 75, 80, 81, 82, 84]
             { id: "MAT-361", name: "Análisis de Algoritmos", sem: 5, req: ["SIS-211"] },
             { id: "SIS-212", name: "Prog. Dispositivos Móviles", sem: 5, req: ["SIS-122", "SIS-113"] },
             { id: "SIS-215", name: "Tecnologías Web II", sem: 5, req: ["SIS-214", "SIS-221"] },
             { id: "SIS-251", name: "Ingeniería de Datos", sem: 5, req: ["MAT-133", "MAT-123"] },
-            { id: "SIS-226", name: "Sistemas de Soporte a las Decisiones Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
+            { id: "SIS-226", name: "Sistemas de Soporte Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
             { id: "SIS-231", name: "Redes de Computadoras I", sem: 5, req: ["SIS-133"] },
-            { id: "LIBRE", name: "LIBRE I", sem: 5, req: [] },
+            { id: "LIBRE-1", name: "LIBRE I", sem: 5, req: [] },
 
-            // SEM 6
+            // SEM 6 [cite: 91, 93, 99, 100, 104, 107, 110]
             { id: "SIS-213", name: "Ingeniería de Software", sem: 6, req: ["SIS-214", "SIS-225"] },
-            { id: "SIS-216", name: "Modelado, Dinámica de Sistemas y Simulación", sem: 6, req: ["MAT-252","FIS-111"] },
+            { id: "SIS-216", name: "Modelado y Simulación", sem: 6, req: ["MAT-262","FIS-111"] },
             { id: "SIS-252", name: "Inteligencia Artificial", sem: 6, req: ["SIS-251", "MAT-361"] },
             { id: "DER-394", name: "Derecho de las TIC y Ética", sem: 6, req: ["SIS-226"] },
             { id: "SIS-233", name: "Redes de Computadoras II", sem: 6, req: ["SIS-231"] },
-            { id: "SIS-227", name: "Taller de Sistemas de Información", sem: 6, req: ["SIS-215", "SIS-226"] },
-            { id: "LIBRE II", name: "LIBRE II", sem: 6, req: ["LIBRE"] },
+            { id: "SIS-227", name: "Taller de Sistemas de Inf.", sem: 6, req: ["SIS-215", "SIS-226"] },
+            { id: "LIBRE-2", name: "LIBRE II", sem: 6, req: [] },
 
-            // SEM 7
+            // SEM 7 [cite: 102, 109, 113, 124, 125, 142]
             { id: "SIS-311", name: "Arquitectura de Software", sem: 7, req: ["SIS-213"] },
-            { id: "SIS-312", name: "Gestión de Calidad de Sistemas", sem: 7, req: ["SIS-227"] },
+            { id: "SIS-312", name: "Gestión de Calidad de Sist.", sem: 7, req: ["SIS-227"] },
             { id: "SIS-351", name: "Machine Learning", sem: 7, req: ["SIS-252"] },
             { id: "SIS-325", name: "Ética y Seguridad de Sist.", sem: 7, req: ["SIS-227"] },
             { id: "SIS-234", name: "Internet de las Cosas", sem: 7, req: ["SIS-233"] },
             { id: "SIS-331", name: "Computación en la Nube", sem: 7, req: ["SIS-233"] },
             { id: "FHC-340", name: "FHC 3", sem: 7, req: ["FHC-240"] },
 
-            // SEM 8
-            { id: "SIS-313", name: "Gerencia de las TIC", sem: 8, req: ["SIS-227"] },
-            { id: "SIS-352", name: "Taller de Sistemas Inteligentes", sem: 8, req: ["SIS-351"] },
+            // SEM 8 [cite: 118, 120, 121, 157, 159]
+            { id: "SIS-315", name: "Gerencia de las TIC", sem: 8, req: ["SIS-213"] },
+            { id: "SIS-352", name: "Taller Sist. Inteligentes", sem: 8, req: ["SIS-351"] },
             { id: "SIS-324", name: "Auditoría de Sistemas", sem: 8, req: ["SIS-312"] },
-            { id: "SIS-361", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
-            { id: "SIS-362", name: "Taller de Grado I", sem: 8, req: ["SIS-312", "SIS-331"] },
+            { id: "SIS-361-P", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
+            { id: "SIS-362", name: "Taller de Grado I", sem: 8, req: ["SIS-161", "SIS-213"] },
 
-            // SEM 9
-            { id: "SIS-363", name: "Taller de Grado II", sem: 9, req: ["SIS-362"] }
-             
-             // Al final de tu array const materias = [ ... ]
+            // SEM 9 [cite: 166, 168]
+            { id: "SIS-363", name: "Taller de Grado II", sem: 9, req: ["SIS-362"] },
+
+            // LÍNEA DE INGLÉS
             { id: "ING-00", name: "Iniciación al Inglés", sem: "INGLES", req: [] },
             { id: "ING-01", name: "Inglés 1", sem: "INGLES", req: ["ING-00"] },
             { id: "ING-02", name: "Inglés 2", sem: "INGLES", req: ["ING-01"] },
@@ -162,8 +167,8 @@
             
             malla.innerHTML = '';
             filaIngles.innerHTML = '';
-        
-            // 1. Renderizar Semestres normales (1 al 9)
+
+            // Renderizar Semestres 1 al 9 [cite: 17, 25]
             for (let s = 1; s <= 9; s++) {
                 const col = document.createElement('div');
                 col.className = 'semestre-col';
@@ -174,23 +179,20 @@
                 });
                 malla.appendChild(col);
             }
-        
-            // 2. Renderizar Fila de Inglés aparte
+
+            // Renderizar Fila de Inglés
             materias.filter(m => m.sem === "INGLES").forEach(m => {
-                const divIngles = crearMateriaHTML(m);
-                divIngles.style.minWidth = "180px"; // Asegura que se vean bien en fila
-                filaIngles.appendChild(divIngles);
+                filaIngles.appendChild(crearMateriaHTML(m));
             });
-        
+
             actualizarProgreso();
         }
-        
-        // Función auxiliar para no repetir código de creación de cuadritos
+
         function crearMateriaHTML(m) {
             const isDone = aprobadas.includes(m.id);
             const missing = m.req.filter(r => !aprobadas.includes(r));
             const isLocked = !isDone && missing.length > 0;
-        
+
             const div = document.createElement('div');
             div.className = `materia ${isDone ? 'completed' : (isLocked ? 'locked' : 'available')}`;
             div.innerHTML = `
@@ -198,7 +200,7 @@
                 <div class="materia-code">${m.id}</div>
                 ${isLocked ? `<div class="tooltip">Falta: ${missing.join(', ')}</div>` : ''}
             `;
-        
+
             div.onclick = () => {
                 if (isLocked) return;
                 if (isDone) {
@@ -211,14 +213,13 @@
             };
             return div;
         }
-        
+
         function actualizarProgreso() {
             const pct = (aprobadas.length / materias.length) * 100;
             document.getElementById('progress-bar').style.width = pct + '%';
             document.getElementById('progreso-texto').innerText = `Progreso: ${aprobadas.length} / ${materias.length} materias (${Math.round(pct)}%)`;
         }
 
-        // Ejecutar al cargar
         render();
     </script>
 </body>
