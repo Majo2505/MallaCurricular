@@ -69,6 +69,9 @@
     </div>
 
     <div class="malla-grid" id="malla"></div>
+    <h2 style="text-align:center; color: var(--primary); margin-top:40px;">Línea de Inglés</h2>
+    <div id="fila-ingles" style="display: flex; gap: 15px; justify-content: center; padding: 20px; overflow-x: auto;">
+    </div>
 
     <script>
          const materias = [
@@ -126,7 +129,7 @@
             { id: "SIS-311", name: "Arquitectura de Software", sem: 7, req: ["SIS-213"] },
             { id: "SIS-312", name: "Gestión de Calidad de Sistemas", sem: 7, req: ["SIS-227"] },
             { id: "SIS-351", name: "Machine Learning", sem: 7, req: ["SIS-252"] },
-            { id: "SIS-361", name: "Ética y Seguridad de Sist.", sem: 7, req: ["SIS-227"] },
+            { id: "SIS-325", name: "Ética y Seguridad de Sist.", sem: 7, req: ["SIS-227"] },
             { id: "SIS-234", name: "Internet de las Cosas", sem: 7, req: ["SIS-233"] },
             { id: "SIS-331", name: "Computación en la Nube", sem: 7, req: ["SIS-233"] },
             { id: "FHC-340", name: "FHC 3", sem: 7, req: ["FHC-240"] },
@@ -140,55 +143,79 @@
 
             // SEM 9
             { id: "SIS-363", name: "Taller de Grado II", sem: 9, req: ["SIS-362"] }
+             
+             // Al final de tu array const materias = [ ... ]
+            { id: "ING-00", name: "Iniciación al Inglés", sem: "INGLES", req: [] },
+            { id: "ING-01", name: "Inglés 1", sem: "INGLES", req: ["ING-00"] },
+            { id: "ING-02", name: "Inglés 2", sem: "INGLES", req: ["ING-01"] },
+            { id: "ING-03", name: "Inglés 3", sem: "INGLES", req: ["ING-02"] },
+            { id: "ING-04", name: "Inglés 4", sem: "INGLES", req: ["ING-03"] },
+            { id: "ING-05", name: "Inglés 5", sem: "INGLES", req: ["ING-04"] }
         ];
 
         let aprobadas = JSON.parse(localStorage.getItem('ucb_sis_progreso')) || [];
 
         function render() {
             const malla = document.getElementById('malla');
-            if (!malla) return;
+            const filaIngles = document.getElementById('fila-ingles');
+            if (!malla || !filaIngles) return;
+            
             malla.innerHTML = '';
-
+            filaIngles.innerHTML = '';
+        
+            // 1. Renderizar Semestres normales (1 al 9)
             for (let s = 1; s <= 9; s++) {
                 const col = document.createElement('div');
                 col.className = 'semestre-col';
                 col.innerHTML = `<div class="sem-header">SEM ${s}</div>`;
                 
-                const materiasSemestre = materias.filter(m => m.sem === s);
-                
-                materiasSemestre.forEach(m => {
-                    const isDone = aprobadas.includes(m.id);
-                    const missing = m.req.filter(r => !aprobadas.includes(r));
-                    const isLocked = !isDone && missing.length > 0;
-
-                    const div = document.createElement('div');
-                    div.className = `materia ${isDone ? 'completed' : (isLocked ? 'locked' : 'available')}`;
-                    div.innerHTML = `
-                        <div class="materia-name">${m.name}</div>
-                        <div class="materia-code">${m.id}</div>
-                        ${isLocked ? `<div class="tooltip">Falta: ${missing.join(', ')}</div>` : ''}
-                    `;
-
-                    div.onclick = () => {
-                        if (isLocked) return;
-                        if (isDone) {
-                            aprobadas = aprobadas.filter(id => id !== m.id);
-                        } else {
-                            aprobadas.push(m.id);
-                        }
-                        localStorage.setItem('ucb_sis_progreso', JSON.stringify(aprobadas));
-                        render();
-                    };
-                    col.appendChild(div);
+                materias.filter(m => m.sem === s).forEach(m => {
+                    col.appendChild(crearMateriaHTML(m));
                 });
                 malla.appendChild(col);
             }
-            
+        
+            // 2. Renderizar Fila de Inglés aparte
+            materias.filter(m => m.sem === "INGLES").forEach(m => {
+                const divIngles = crearMateriaHTML(m);
+                divIngles.style.minWidth = "180px"; // Asegura que se vean bien en fila
+                filaIngles.appendChild(divIngles);
+            });
+        
+            actualizarProgreso();
+        }
+        
+        // Función auxiliar para no repetir código de creación de cuadritos
+        function crearMateriaHTML(m) {
+            const isDone = aprobadas.includes(m.id);
+            const missing = m.req.filter(r => !aprobadas.includes(r));
+            const isLocked = !isDone && missing.length > 0;
+        
+            const div = document.createElement('div');
+            div.className = `materia ${isDone ? 'completed' : (isLocked ? 'locked' : 'available')}`;
+            div.innerHTML = `
+                <div class="materia-name">${m.name}</div>
+                <div class="materia-code">${m.id}</div>
+                ${isLocked ? `<div class="tooltip">Falta: ${missing.join(', ')}</div>` : ''}
+            `;
+        
+            div.onclick = () => {
+                if (isLocked) return;
+                if (isDone) {
+                    aprobadas = aprobadas.filter(id => id !== m.id);
+                } else {
+                    aprobadas.push(m.id);
+                }
+                localStorage.setItem('ucb_sis_progreso', JSON.stringify(aprobadas));
+                render();
+            };
+            return div;
+        }
+        
+        function actualizarProgreso() {
             const pct = (aprobadas.length / materias.length) * 100;
-            const bar = document.getElementById('progress-bar');
-            const txt = document.getElementById('progreso-texto');
-            if(bar) bar.style.width = pct + '%';
-            if(txt) txt.innerText = `Progreso: ${aprobadas.length} / ${materias.length} materias (${Math.round(pct)}%)`;
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progreso-texto').innerText = `Progreso: ${aprobadas.length} / ${materias.length} materias (${Math.round(pct)}%)`;
         }
 
         // Ejecutar al cargar
