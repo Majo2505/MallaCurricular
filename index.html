@@ -19,10 +19,11 @@
 
         .malla-grid {
             display: grid;
-            grid-template-columns: repeat(9, 180px);
+            grid-template-columns: repeat(9, 200px); /* Ajustado para mejor visibilidad */
             gap: 15px;
             overflow-x: auto;
             padding: 20px 0;
+            min-height: 500px;
         }
 
         .semestre-col { display: flex; flex-direction: column; gap: 10px; }
@@ -46,9 +47,10 @@
         .materia.locked { background: #ecf0f1; cursor: not-allowed; opacity: 0.6; }
 
         .tooltip {
-            visibility: hidden; background: #333; color: #white; text-align: center;
-            padding: 5px; border-radius: 4px; position: absolute; z-index: 10;
-            bottom: 105%; left: 0; width: 100%; font-size: 0.7rem; color: white;
+            visibility: hidden; background: #333; color: white; text-align: center;
+            padding: 8px; border-radius: 4px; position: absolute; z-index: 10;
+            bottom: 105%; left: 0; width: 100%; font-size: 0.7rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .materia.locked:hover .tooltip { visibility: visible; }
 
@@ -107,22 +109,22 @@
             { id: "SIS-212", name: "Prog. Dispositivos Móviles", sem: 5, req: ["SIS-211", "SIS-113"] },
             { id: "SIS-215", name: "Tecnologías Web II", sem: 5, req: ["SIS-214", "SIS-221"] },
             { id: "SIS-251", name: "Ingeniería de Datos", sem: 5, req: ["MAT-133", "MAT-123"] },
-            { id: "SIS-226", name: "Sistemas de Soporte a las Decisiones Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
+            { id: "SIS-226", name: "Sistemas de Soporte Gerenciales", sem: 5, req: ["SIS-225", "SIS-221"] },
             { id: "SIS-231", name: "Redes de Computadoras I", sem: 5, req: ["SIS-133"] },
-            { id: "LIBRE", name: "LIBRE I", sem: 5, req: [] },
+            { id: "LIBRE-1", name: "LIBRE I", sem: 5, req: [] },
 
             // SEM 6
             { id: "SIS-213", name: "Ingeniería de Software", sem: 6, req: ["SIS-214", "SIS-225"] },
-            { id: "SIS-216", name: "Modelado, Dinámica de Sistemas y Simulación", sem: 6, req: ["MAT-252","FIS-111"] },
+            { id: "SIS-216", name: "Modelado y Simulación", sem: 6, req: ["MAT-143","FIS-111"] },
             { id: "SIS-252", name: "Inteligencia Artificial", sem: 6, req: ["SIS-251", "MAT-361"] },
             { id: "DER-394", name: "Derecho de las TIC y Ética", sem: 6, req: ["SIS-226"] },
             { id: "SIS-233", name: "Redes de Computadoras II", sem: 6, req: ["SIS-231"] },
-            { id: "SIS-227", name: "Taller de Sistemas de Información", sem: 6, req: ["SIS-215", "SIS-226"] },
-            { id: "LIBRE", name: "LIBRE II", sem: 6, req: [] },
+            { id: "SIS-227", name: "Taller de Sist. Información", sem: 6, req: ["SIS-215", "SIS-226"] },
+            { id: "LIBRE-2", name: "LIBRE II", sem: 6, req: [] },
 
             // SEM 7
             { id: "SIS-311", name: "Arquitectura de Software", sem: 7, req: ["SIS-213"] },
-            { id: "SIS-312", name: "Gestión de Calidad de Sistemas", sem: 7, req: ["SIS-227"] },
+            { id: "SIS-312", name: "Gestión de Calidad de Sist.", sem: 7, req: ["SIS-227"] },
             { id: "SIS-351", name: "Machine Learning", sem: 7, req: ["SIS-252"] },
             { id: "SIS-361", name: "Ética y Seguridad de Sist.", sem: 7, req: ["SIS-227"] },
             { id: "SIS-234", name: "Internet de las Cosas", sem: 7, req: ["SIS-233"] },
@@ -131,9 +133,9 @@
 
             // SEM 8
             { id: "SIS-313", name: "Gerencia de las TIC", sem: 8, req: ["SIS-227"] },
-            { id: "SIS-352", name: "Taller de Sistemas Inteligentes", sem: 8, req: ["SIS-351"] },
+            { id: "SIS-352", name: "Taller Sist. Inteligentes", sem: 8, req: ["SIS-351"] },
             { id: "SIS-324", name: "Auditoría de Sistemas", sem: 8, req: ["SIS-312"] },
-            { id: "SIS-361", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
+            { id: "SIS-361-P", name: "Práctica Pre-Profesional", sem: 8, req: ["SIS-351"] },
             { id: "SIS-362", name: "Taller de Grado I", sem: 8, req: ["SIS-312", "SIS-331"] },
 
             // SEM 9
@@ -144,6 +146,7 @@
 
         function render() {
             const malla = document.getElementById('malla');
+            if (!malla) return;
             malla.innerHTML = '';
 
             for (let s = 1; s <= 9; s++) {
@@ -151,7 +154,9 @@
                 col.className = 'semestre-col';
                 col.innerHTML = `<div class="sem-header">SEM ${s}</div>`;
                 
-                materias.filter(m => m.sem === s).forEach(m => {
+                const materiasSemestre = materias.filter(m => m.sem === s);
+                
+                materiasSemestre.forEach(m => {
                     const isDone = aprobadas.includes(m.id);
                     const missing = m.req.filter(r => !aprobadas.includes(r));
                     const isLocked = !isDone && missing.length > 0;
@@ -161,14 +166,33 @@
                     div.innerHTML = `
                         <div class="materia-name">${m.name}</div>
                         <div class="materia-code">${m.id}</div>
-                        ${isLocked ? `<div class="tooltip">Requisito: ${missing.join(', ')}</div>` : ''}
+                        ${isLocked ? `<div class="tooltip">Falta: ${missing.join(', ')}</div>` : ''}
                     `;
 
                     div.onclick = () => {
                         if (isLocked) return;
-                        if (isDone) aprobadas = aprobadas.filter(id => id !== m.id);
-                        else aprobadas.push(m.id);
-                        
+                        if (isDone) {
+                            aprobadas = aprobadas.filter(id => id !== m.id);
+                        } else {
+                            aprobadas.push(m.id);
+                        }
                         localStorage.setItem('ucb_sis_progreso', JSON.stringify(aprobadas));
                         render();
                     };
+                    col.appendChild(div);
+                });
+                malla.appendChild(col);
+            }
+            
+            const pct = (aprobadas.length / materias.length) * 100;
+            const bar = document.getElementById('progress-bar');
+            const txt = document.getElementById('progreso-texto');
+            if(bar) bar.style.width = pct + '%';
+            if(txt) txt.innerText = `Progreso: ${aprobadas.length} / ${materias.length} materias (${Math.round(pct)}%)`;
+        }
+
+        // Ejecutar al cargar
+        render();
+    </script>
+</body>
+</html>
